@@ -1,0 +1,112 @@
+---
+title: "Introduction to data visualization for dental researchers"
+author: Sergio Uribe
+output: html_notebook
+---
+
+# Introduction
+
+Required
+```{r}
+library(tidyverse)
+```
+
+```{r}
+df <- read_csv("http://bit.ly/caries_visualization")
+```
+
+
+## The data
+The structure of your data will dictate how you construct plots 
+
+```{r}
+glimpse(df)
+```
+
+```{r}
+summary(df)
+```
+
+Tell R that School is a factor and not a number
+```{r}
+df$school <- as.character(df$school)
+```
+
+```{r}
+summary(df)
+```
+```{r}
+df %>% 
+  select(-RUT)
+```
+```{r}
+df <- df %>% 
+  select(-RUT)
+```
+
+## Tables
+
+
+```{r}
+table(df$school, df$sex)
+```
+
+## Recode
+```{r}
+df %>% 
+  mutate(sex = fct_recode(sex,
+    "male" = "mle"
+  ))
+```
+```{r}
+df <- df %>% 
+  mutate(sex = fct_recode(sex,
+    "male" = "mle"
+  ))
+```
+```{r}
+table(df$school, df$sex)
+```
+
+## Reorder
+
+```{r}
+df$school <- fct_inorder(df$school)
+```
+
+```{r}
+table(df$school, df$sex)
+```
+## Filter
+
+```{r}
+df %>% 
+  filter(school == "1")
+```
+
+
+## Summaries
+
+```{r}
+df %>% 
+  group_by(sex) %>% 
+  summarise("Age mean" = mean(age))
+```
+
+You have two options: change by hand or omit the NA values
+
+```{r}
+
+```
+
+
+ggplot graphics are built step by step by adding new elements. Adding layers in this fashion allows for extensive flexibility and customization of plots.
+
+
+## Aesthetics
+
+Aesthetic mappings are the cornerstone of the grammar of graphics plotting concept. This is where the magic happens - converting continuous and categorical data into visual scales that provide access to a large amount of information in a very short time
+
+
+## Plot geometry
+A plot’s geometry dictates what visual elements will be used. 
