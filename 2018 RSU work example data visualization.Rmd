@@ -1,0 +1,149 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+
+```{r}
+
+library(NHANES)
+```
+
+```{r}
+NHANES
+```
+
+```{r}
+View(NHANES)
+```
+
+# EDA
+
+## See the data
+
+```{r}
+View(NHANES)
+```
+
+```{r}
+glimpse(NHANES)
+```
+
+
+```{r}
+summary(NHANES)
+```
+
+```{r}
+table(NHANES$Gender)
+```
+```{r}
+glimpse(NHANES)
+```
+
+
+```{r}
+NHANES %>%
+  ggplot(aes(x = HeadCirc, y = HHIncomeMid, color = Gender))+
+  geom_point() +
+  geom_smooth()
+```
+
+## Visualizations
+
+```{r}
+hist(NHANES$Age)
+```
+# Association
+SmokeAge
+AgeFirstMarij
+
+```{r}
+NHANES %>% 
+  ggplot(aes(x = SmokeAge, y = AgeFirstMarij, color = Gender)) +
+  geom_point() + 
+  geom_smooth()
+```
+
+
+
+# Distribution
+
+```{r}
+NHANES %>% 
+  ggplot(aes(x = Age)) +
+  geom_histogram(bins = 10)
+```
+```{r}
+NHANES %>% 
+  ggplot(aes(x = Race1, fill= Diabetes)) + 
+  geom_bar(position = "fill")
+```
+
+
+# Compare
+```{r}
+NHANES %>% 
+  ggplot(aes(x = Race1, y = Age))  +
+  geom_boxplot() +
+  coord_flip()
+```
+
+
+
+```{r}
+NHANES %>% 
+  ggplot(aes(x = Education, y = HHIncomeMid, color = Gender)) + 
+  geom_boxplot()
+```
+
+# Trend
+
+```{r}
+install.packages("gapminder")
+library(gapminder)
+```
+
+```{r}
+gapminder
+```
+
+```{r}
+gapminder %>% 
+  filter(country == c("China", "India", "Australia")) %>% 
+  ggplot(aes(x = year, y = gdpPercap, color = country)) + 
+  geom_point() +
+  geom_line() + 
+  scale_y_log10()
+           
+```
+
+# Prepare my graph for presentation
+
+```{r}
+gapminder %>% 
+  filter(country == c("China", "India", "Australia")) %>% 
+  ggplot(aes(x = year, y = gdpPercap, color = country)) + 
+  geom_point() +
+  geom_line() + 
+  scale_y_log10() +
+  labs(
+    title = "Comparison of GDP between 1950-2000", 
+    y = "GDP per capita", 
+    x = "Year" , 
+    color = "Country"
+  ) +
+  theme_pander()
+```
+```{r}
+install.packages("ggthemes")
+library(ggthemes)
+```
+
+
+

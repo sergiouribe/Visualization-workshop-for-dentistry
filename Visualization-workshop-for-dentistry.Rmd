@@ -84,6 +84,26 @@ df %>%
   filter(school == "1")
 ```
 
+```{r}
+df %>% 
+  filter(school == "1" & sex == "female")
+```
+```{r}
+df %>% 
+  filter(D < 2)
+```
+
+```{r}
+df %>% 
+  filter(D > 1 & M > 1 & F > 1)
+```
+```{r}
+df %>% 
+  filter(D > 1 | M > 1 | F > 1)```
+
+
+## Anscombre
+
 
 ## Summaries
 
@@ -93,11 +113,79 @@ df %>%
   summarise("Age mean" = mean(age))
 ```
 
+
+```{r}
+install.packages("devtools")
+library(devtools)
+install_github("russHyde/exemplr")
+
+anscombe_tidy <- exemplr::get_tidy_anscombe()
+```
+
+```{r}
+anscombe_tidy
+```
+```{r}
+anscombe_tidy %>% 
+  group_by(group) %>% 
+  summarise(mean_x = mean(x), sd_x = sd(x), mean_y = mean(y), sd_y = sd(y) )
+```
+
+```{r}
+anscombe_tidy %>% 
+  ggplot(aes(x, y, color = group)) + 
+  geom_point() + 
+  facet_wrap(~group) + 
+  geom_smooth(method = "lm")
+```
+
+```{r}
+cor(anscombe$x1, anscombe$y1)
+```
+```{r}
+cor(anscombe$x2, anscombe$y2)
+```
+
+```{r}
+anscombe_tidy %>% 
+  ggplot(aes(x, y, color = group)) + 
+  geom_point() + 
+  facet_wrap(~group) + 
+  geom_smooth(method = "loess")
+```
+
+
 You have two options: change by hand or omit the NA values
 
 ```{r}
-
+df %>% 
+  na.exclude(.) %>% 
+  group_by(sex) %>% 
+  summarise("Age mean" = mean(age, ))
 ```
+### Ubicar al NA
+```{r}
+is.na(df$age)
+```
+```{r}
+sum(is.na(df$age))
+```
+```{r}
+which(is.na(df$age))
+```
+
+We can create a "clean of NA" dataset
+
+```{r}
+df_clean <- df[complete.cases(df),]
+```
+
+```{r}
+df_clean %>% 
+  group_by(sex) %>% 
+  summarise("Age in months" = mean(age))
+```
+
 
 
 ggplot graphics are built step by step by adding new elements. Adding layers in this fashion allows for extensive flexibility and customization of plots.
