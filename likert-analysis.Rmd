@@ -1,0 +1,74 @@
+---
+title: "2018 Course evaluation"
+output: html_notebook
+---
+```{r, warning=FALSE, results='hide'}
+library(tidyverse)
+```
+
+```{r}
+df <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-Basm13tcBDE6EAjv-nBisNz-D1dqHqSTO3NACCcYU5GlX-DOUeWARP_N7688f8HY_HCWGb6e1gfT/pub?gid=1922796063&single=true&output=csv")
+```
+
+Wrangle and gather the dataset
+```{r}
+df <- df %>% 
+  gather(key = "Item", value = "valor", `About the presenter [The presenter delivered the material in a clear and structured manner.]`:`About the presentation [I would recommend this presentation to others]`) %>% 
+  mutate(Answer = 
+           case_when(
+             valor == "Strongly disagree" ~ 1, 
+             valor == "Disagree" ~ 2, 
+             valor == "Neither agree nor disagree" ~ 3, 
+             valor == "Agree" ~ 4, 
+             TRUE ~ 5
+           )) 
+```
+
+Change to factors
+```{r}
+df$Answer <- factor(df$Answer, 
+                    levels = c("1", "2", "3", "4", "5"),
+                    ordered = TRUE)
+```
+
+Leave only relevant columns
+```{r}
+df <- df %>% 
+  select(Item, Answer, `Marca temporal`) #leave "MARCA" as ID
+```
+
+
+# Likert analysis
+```{r}
+library(likert)
+```
+Prepare the dataset for likert
+```{r}
+df <- df %>% 
+  spread(Item, Answer)
+```
+
+
+```{r}
+summary(df)
+```
+
+
+```{r}
+str(df)
+```
+```{r}
+df <- df %>% 
+  select(-`Marca temporal`)
+```
+
+```{r}
+results <- likert(as.data.frame(df)) # tell likert that df is a dataframe
+```
+
+
+```{r}
+plot(results,
+     type="bar")
+```
+
